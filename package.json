@@ -1,0 +1,133 @@
+{
+  "name": "custom-file-explorer",
+  "displayName": "Custom File Explorer",
+  "description": "A detachable file explorer view that pairs with the built-in explorer and can open files or folders in a new window.",
+  "version": "0.0.1",
+  "publisher": "ignaciourbina",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "customFileExplorer",
+          "title": "Custom File Explorer",
+          "icon": "$(files)"
+        }
+      ]
+    },
+    "views": {
+      "customFileExplorer": [
+        {
+          "id": "customFileExplorer.tree",
+          "name": "Custom File Explorer",
+          "icon": "$(files)",
+          "contextualTitle": "Custom File Explorer"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "customFileExplorer.refresh",
+        "title": "Refresh",
+        "category": "Custom File Explorer",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "customFileExplorer.openInNewWindow",
+        "title": "Open in New Window",
+        "category": "Custom File Explorer"
+      },
+      {
+        "command": "customFileExplorer.openFile",
+        "title": "Open File",
+        "category": "Custom File Explorer"
+      },
+      {
+        "command": "customFileExplorer.revealInExplorer",
+        "title": "Reveal in Built-in Explorer",
+        "category": "Custom File Explorer"
+      },
+      {
+        "command": "customFileExplorer.revealInOS",
+        "title": "Reveal in File Manager",
+        "category": "Custom File Explorer"
+      },
+      {
+        "command": "customFileExplorer.copyPath",
+        "title": "Copy Path",
+        "category": "Custom File Explorer"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "customFileExplorer.refresh",
+          "when": "view == customFileExplorer.tree",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "customFileExplorer.openInNewWindow",
+          "when": "view == customFileExplorer.tree",
+          "group": "navigation@1"
+        },
+        {
+          "command": "customFileExplorer.revealInExplorer",
+          "when": "view == customFileExplorer.tree",
+          "group": "navigation@2"
+        },
+        {
+          "command": "customFileExplorer.revealInOS",
+          "when": "view == customFileExplorer.tree",
+          "group": "1_open@1"
+        },
+        {
+          "command": "customFileExplorer.copyPath",
+          "when": "view == customFileExplorer.tree",
+          "group": "9_clip@1"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Custom File Explorer",
+      "properties": {
+        "customFileExplorer.showHidden": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show hidden (dotfile) entries in the tree."
+        },
+        "customFileExplorer.excludeGlobs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["node_modules", ".git", "out", "dist", ".DS_Store"],
+          "description": "Directory/file names to exclude from the tree."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "MIT"
+}
