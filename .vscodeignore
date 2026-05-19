@@ -1,8 +1,14 @@
 .vscode/**
 .vscode-test/**
 src/**
+.git/**
 .gitignore
+.vscodeignore
 tsconfig.json
+Makefile
+package-lock.json
 **/*.map
 **/*.ts
+**/*.vsix
+Screenshot*.png
 node_modules/**

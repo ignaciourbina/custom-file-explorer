@@ -4,7 +4,7 @@ VERSION   := $(shell node -p "require('./package.json').version")
 EXT_ROOT  := $(HOME)/.vscode/extensions
 EXT_DIR   := $(EXT_ROOT)/$(PUBLISHER).$(NAME)-$(VERSION)
 
-.PHONY: all compile deploy link uninstall clean reinstall print
+.PHONY: all compile deploy link uninstall clean reinstall print package
 
 all: deploy
 
@@ -32,6 +32,10 @@ reinstall: uninstall deploy
 
 clean:
 	@rm -rf out
+
+package: compile
+	@npm run package
+	@echo "Created $(NAME)-$(VERSION).vsix"
 
 print:
 	@echo "VERSION  = $(VERSION)"
