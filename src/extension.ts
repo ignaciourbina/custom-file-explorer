@@ -105,8 +105,9 @@ function getNonce(): string {
   return text;
 }
 
+const activePanels = new Set<CustomFileExplorerPanel>();
+
 class CustomFileExplorerPanel {
-  public static currentPanel: CustomFileExplorerPanel | undefined;
   public static readonly viewType = 'customFileExplorer';
 
   private readonly _panel: vscode.WebviewPanel;
@@ -114,13 +115,8 @@ class CustomFileExplorerPanel {
   private readonly _disposables: vscode.Disposable[] = [];
   private _refreshTimer: NodeJS.Timeout | undefined;
 
-  public static createOrShow(context: vscode.ExtensionContext): void {
+  public static create(context: vscode.ExtensionContext): void {
     const column = vscode.window.activeTextEditor?.viewColumn ?? vscode.ViewColumn.One;
-
-    if (CustomFileExplorerPanel.currentPanel) {
-      CustomFileExplorerPanel.currentPanel._panel.reveal(column);
-      return;
-    }
 
     const panel = vscode.window.createWebviewPanel(
       CustomFileExplorerPanel.viewType,
@@ -134,12 +130,13 @@ class CustomFileExplorerPanel {
 
     panel.iconPath = vscode.Uri.joinPath(context.extensionUri, 'media', 'icon.svg');
 
-    CustomFileExplorerPanel.currentPanel = new CustomFileExplorerPanel(panel, context);
+    new CustomFileExplorerPanel(panel, context);
   }
 
   private constructor(panel: vscode.WebviewPanel, context: vscode.ExtensionContext) {
     this._panel = panel;
     this._context = context;
+    activePanels.add(this);
 
     this._panel.webview.html = this._getHtml(this._panel.webview);
 
@@ -316,7 +313,7 @@ class CustomFileExplorerPanel {
   }
 
   public dispose(): void {
-    CustomFileExplorerPanel.currentPanel = undefined;
+    activePanels.delete(this);
     if (this._refreshTimer) {
       clearTimeout(this._refreshTimer);
       this._refreshTimer = undefined;
@@ -560,13 +557,13 @@ class CustomFileExplorerPanel {
 export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand('customFileExplorer.open', () => {
-      CustomFileExplorerPanel.createOrShow(context);
+      CustomFileExplorerPanel.create(context);
     })
   );
 }
 
 export function deactivate(): void {
-  if (CustomFileExplorerPanel.currentPanel) {
-    CustomFileExplorerPanel.currentPanel.dispose();
+  for (const p of Array.from(activePanels)) {
+    p.dispose();
   }
 }

@@ -2,7 +2,7 @@
   "name": "custom-file-explorer",
   "displayName": "Custom File Explorer",
   "description": "A detachable file explorer panel that opens as an editor tab and can be moved to a floating window. Pairs with the built-in explorer.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "ignaciourbina",
   "engines": {
     "vscode": "^1.85.0"
